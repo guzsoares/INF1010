@@ -28,7 +28,6 @@ struct triangulo{
 };
 typedef struct triangulo Triangulo;
 
-
 struct hexagono{
     float b;
 };
@@ -50,7 +49,6 @@ struct quadrado{
 };
 typedef struct quadrado Quadrado;
 
-
 struct lista{
   int tipo;
   void *info;
@@ -62,7 +60,6 @@ typedef struct lista Lista;
 static float area_ret(Retangulo *r){
     return(r->b*r->h);
 }
-
 static float area_trig(Triangulo *t){
     float area = (sqrt(3)/4)*pow(t->b,2);
     return (area);
@@ -71,7 +68,6 @@ static float area_circ(Circulo *c){
     float area = M_PI*pow(c->r,2);
     return area;
 }
-
 static float area_hex(Hexagono *h){
     float area = (3*sqrt(3)*pow(h->b,2))/2;
     return area;
@@ -117,15 +113,13 @@ Lista* cria_circulo(float r){
     return curr_data;
 }
 
-
-Lista* cria_triangulo(float b, float h){
+Lista* cria_triangulo(float b){
     Triangulo* trig;
     Lista* curr_data;
 
     // cria triangulo
     trig = (Triangulo*)malloc(sizeof(Retangulo));
     trig->b = b;
-    trig->h = h;
 
     // cria lista
     curr_data = (Lista*)malloc(sizeof(Lista));
@@ -181,7 +175,7 @@ float calculaArea(Lista *lst){
             break;
 
         case TRI:
-            area  = area_tri((Triangulo*)lst->info);        
+            area  = area_trig((Triangulo*)lst->info);        
             break;
 
         case HEX:
@@ -204,49 +198,48 @@ float calculaArea(Lista *lst){
 }
 
 Lista* lst_busca (Lista* lst, int val){ 
-    Lista* p;
-    for (p=lst; p!=NULL; p = p->prox) {
-        if (p->tipo == val)
-        return p;
+    Lista* aux;
+    for (aux=lst; aux!=NULL; aux = aux->prox) {
+        if (aux->tipo == val)
+        return aux;
     }
     return NULL; /* não achou o elemento */
 }
-
+/*
 Lista* lst_retira (Lista* lst, int val){
-    Lista* ant = NULL; /* ponteiro para elemento anterior */
-    Lista* p = lst; /* ponteiro para percorrer a lista */
-    /* procura elemento na lista, guardando anterior */
+    Lista* ant = NULL; 
+    Lista* p = lst; 
     while (p != NULL && p->info != val) {
         ant = p;
         p = p->prox;
     }
-    /* verifica se achou elemento */
+
     if (p == NULL)
-        return lst; /* não achou: retorna lista original */
-    /* achou: retira */
-    if (ant == NULL) /* retira elemento do inicio */
+        return lst; 
+
+    if (ant == NULL) /
         lst = p->prox;
-    else /* retira elemento do meio da lista */
+    else 
         ant->prox = p->prox;
     
-    free(p); /* libera espaço ocupado pelo elemento */
+    free(p); 
     return lst;
 }
+*/
 
 void lst_libera (Lista* lst){
-    Lista* p = lst;
-    while (p != NULL) {
-        Lista* t = p->prox; /* guarda referência para o
-        próximo elemento */
-        free(p); /* libera a memória apontada por p */
-        p = t; /* faz p apontar para o próximo */
+    Lista* aux = lst;
+    while (aux != NULL) {
+        Lista* t = aux->prox; /* guarda referência para o próximo elemento */
+        free(aux); /* libera a memória apontada por p */
+        aux = t; /* faz p apontar para o próximo */
     }
 }
 
 float maiorArea(Lista *lst){
     float maiorArea = 0.0;
     Lista *aux;
-    for(aux = 1; aux!= NULL; aux= aux->prox){
+    for(aux = lst; aux!= NULL; aux= aux->prox){
         float area = calculaArea(aux);
         if(area> maiorArea)
             maiorArea = area;
@@ -254,35 +247,26 @@ float maiorArea(Lista *lst){
 
     return maiorArea;
 }
-/*
 
-\/\/\/\//\/\/\/\//\/\/\/\//\/\/\/\//\/\/\//\/\/\/\/\//\/\/\/\/\/\//\*/
-//ESSA FUNCAO TA UMA BOSTA, N SEI OQ EU FIZ, MAS TA COMECANDO
+
 void imprimeLista(Lista* lst){
     Lista *atual;
-    for(atual = 1; atual !=NULL; atual = atual->prox){
+    for(atual = lst; atual !=NULL; atual = atual->prox){
         switch (atual->tipo){
             case QUA:
-                Quadrado *retAux = (Quadrado*) lst->info;
-                printf("Quadrado de lado %f e area %f", retAux->b,calculaArea(atual));
-            break;
-
+                printf("Quadrado de lado %f e area %f",lst->b,calculaArea(atual));
+                break;
             case TRI:
-                Triangulo *triAux = (Triangulo*) lst->info;
-                printf("Triangulo de lado %f e area %f", triAux->b,calculaArea(atual));      
-            break;
-
+                printf("Triangulo de lado %f e area %f", lst->b,calculaArea(atual));      
+                break;
             case HEX:
-                Hexagono *hexAux = (Hexagono*) lst->info;
-                printf("Triangulo de lado %f e area %f", hexAux->b,calculaArea(atual)); 
-            break;
-
+                printf("Triangulo de lado %f e area %f", lst->b,calculaArea(atual)); 
+                break;
             case RET:
-                Retangulo *retAux = (Retangulo*) lst->info;
-                printf("Retangulo de lado %f e  %f e area %f", retAux->b, retAux->h, calculaArea(atual));           
-
+                printf("Retangulo de lado %f e  %f e area %f", lst->b, lst->h, calculaArea(atual));           
+                break;
             case CIR:
-                area  = area_circ((Circulo*)lst->info);
+                printf("Circulo de raio %f e  %f e area %f", lst->b, calculaArea(atual));           
                 break;
             default:
                 printf("Tipo inexistente");
@@ -290,10 +274,24 @@ void imprimeLista(Lista* lst){
             }
     }
 }
-/*\/\/\/\//\/\/\/\//\/\/\/\//\/\/\/\//\/\/\//\/\/\/\/\//\/\/\/\/\/\//\
-*/
-int main (int argc, char **argv){
 
+
+Lista *lst_cria(){
+    return NULL;
+}
+int main (int argc, char **argv){
+    Lista *lst;
+    lst = lst_cria();
+    lst = cria_triangulo(3.0);
+    lst = cria_triangulo(3.0);
+    lst = cria_triangulo(3.0);
+    lst = cria_quad(2.0);
+    lst = cria_ret(3.0, 5.0);
+    lst = cria_circulo(4.0);
+    lst = cria_hex(3.0);
+    
+    printf("%f",maiorArea(lst));
+    
     return 0;
 }
 
