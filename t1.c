@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
 
 #define QUA 0 
 #define TRI 1 
@@ -9,7 +11,7 @@
 
 struct triangulo{
     float b;
-    float h;
+
 };
 typedef struct triangulo Triangulo;
 
@@ -43,6 +45,27 @@ struct lista{
     
 };
 typedef struct lista Lista;
+
+static float area_ret(Retangulo *r){
+    return(r->b*r->h);
+}
+
+static float area_trig(Triangulo *t){
+    float area = (sqrt(3)/4)*pow(t->b,2);
+    return (area);
+}
+static float area_circ(Circulo *c){
+    float area = M_PI*pow(c->r,2);
+    return area;
+}
+
+static float area_hex(Hexagono *h){
+    float area = (3*sqrt(3)*pow(h->b,2))/2;
+    return area;
+}
+static float area_quad(Quadrado *q){
+    return (q->b * q->b);
+}
 
 Lista* cria_ret(float b, float h){
     Retangulo* ret;
@@ -136,25 +159,31 @@ Lista* cria_quad(float b){
     return curr_data;
 }
 
-float calculaArea(int tipo){
+float calculaArea(Lista *dados){
     float area;
 
-    switch (tipo){
-        case 0:
-            area = dados->info.b * dados->info->h;
-            break;
-        case 1:
+    switch (dados->tipo){
+        case QUA:
+            area  = area_ret((Quadrado*)dados->info);
             break;
 
-        case 2:
+        case TRI:
+            area  = area_ret((Triangulo*)dados->info);        
             break;
-        case 3:
+
+        case HEX:
+            area  = area_ret((Hexagono*)dados->info);
+
+            break;
+        case RET:
+            area  = area_ret((Retangulo*)dados->info);
             break;          
 
-        case 4:
+        case CIR:
+            area  = area_ret((Circulo*)dados->info);
             break;
         default:
-            printf("surreal");
+            printf("Tipo inexistente");
             break;  
     }
 
