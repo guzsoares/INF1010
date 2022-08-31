@@ -254,19 +254,19 @@ void imprimeLista(Lista* lst){
     for(atual = lst; atual !=NULL; atual = atual->prox){
         switch (atual->tipo){
             case QUA:
-                printf("Quadrado de lado %f e area %f",lst->b,calculaArea(atual));
+                printf("Quadrado area %f",calculaArea(atual));
                 break;
             case TRI:
-                printf("Triangulo de lado %f e area %f", lst->b,calculaArea(atual));      
+                printf("Triangulo de area %f", calculaArea(atual));      
                 break;
             case HEX:
-                printf("Triangulo de lado %f e area %f", lst->b,calculaArea(atual)); 
+                printf("Triangulo area %f",calculaArea(atual)); 
                 break;
             case RET:
-                printf("Retangulo de lado %f e  %f e area %f", lst->b, lst->h, calculaArea(atual));           
+                printf("Retangulo  area %f",calculaArea(atual));           
                 break;
             case CIR:
-                printf("Circulo de raio %f e  %f e area %f", lst->b, calculaArea(atual));           
+                printf("Circulo de area %f", calculaArea(atual));           
                 break;
             default:
                 printf("Tipo inexistente");
@@ -289,6 +289,8 @@ int main (int argc, char **argv){
     lst = cria_ret(3.0, 5.0);
     lst = cria_circulo(4.0);
     lst = cria_hex(3.0);
+
+    imprimeLista(lst);
     
     printf("%f",maiorArea(lst));
     
