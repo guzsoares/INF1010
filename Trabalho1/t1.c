@@ -33,8 +33,6 @@ struct quadrado{
 };
 typedef struct quadrado Quadrado;
 
-/* ------------------------------------------------------------------------------------- */
-
 /* struct lista */
 
 struct lista{
@@ -45,8 +43,6 @@ struct lista{
 };
 typedef struct lista Lista;
 
-/* --------------------------------------------------------------------------------- */
-
 /* calcular as áreas */
 
 float areaRetang(Retangulo *r);
@@ -55,8 +51,6 @@ float areaCirc(Circulo *c);
 float areaHexa(Hexagono *h);
 float areaQuad(Quadrado *q);
 float calculaArea(Lista *dados);
-
-/* ----------------------------------------------------------------------- */
 
 /* calcular perimetro */
 
@@ -67,8 +61,6 @@ float perimHexa(Hexagono *h);
 float perimQuad(Quadrado *q);
 float calculaPerim(Lista *dados);
 
-/* ---------------------------------------------------------------------------- */
-
 /* cria as formas nas listas */
 
 Lista* criaRetangulo(float b, float h, Lista* dados);
@@ -77,18 +69,20 @@ Lista* criaTriangulo(float b, Lista *dados);
 Lista* criaHexagono(float b, Lista* dados);
 Lista* criaQuadrado(float b, Lista *dados);
 
-/* ------------------------------------------------------------------------------ */
-
 /* manipulacao de lista */
 
 void imprimeDados(Lista* dado);
-void imprimeFigura (Lista* dados, int tipo);
-Lista* buscaIndex (Lista* dados, int val);
-int buscaTriangulo (Lista* dados);
-Lista* retiraTriangulo(Lista* dados);
+void retiraLista(Lista* dados, Lista *retira);
 void freeLista(Lista* dados);
 
-/* ----------------------------------------------------------------------------------------------- */
+/* metodos para serem utilizados */
+
+void imprimeFigura (Lista* dados, int tipo); // primeiro parametro: lista de dados a ser acessada. segundo parametro: tipo de forma a ser impressa
+Lista* buscaTriangulo (Lista* dados, int index); // primeiro parametro: lista de dados a ser acessada. segundo parametro: posição do triangulo a ser buscada. retorno: triangulo buscado.
+void retiraLista(Lista* dados, Lista *retira); // primeiro parametro: lista de dados a ser acessada. segundo parametro: informação a ser retirada
+void freeLista(Lista* dados); // primeiro parametro: lista de dados para ser liberada da memoria;
+
+/* main */
 
 int main (int argc, char **argv){
     Lista *dados = NULL;
@@ -102,10 +96,15 @@ int main (int argc, char **argv){
 
     puts("Lista inicial:\n");
 
-    Lista * aux = buscaIndex(dados, buscaTriangulo(dados));
-    imprimeDados(aux);
+    imprimeFigura(dados, TRI); // Primeira impressão
 
-    imprimeFigura(dados, TRI);
+    puts("");
+
+    Lista * retira = buscaTriangulo(dados, 3);  // buscando o segundo triangulo na lista dados e salvando em retira
+
+    retiraLista(dados, retira);  // retirando o valor retira da lista dados
+
+    imprimeFigura(dados, TRI); // imprimindo
 
     
     return 0;
@@ -358,36 +357,19 @@ void imprimeDados(Lista* dado){
         }
 }
 
-Lista* buscaIndex (Lista* dados, int val){ 
-    Lista* aux;
-    int count = 0;
-    for (aux=dados; aux!=NULL; aux = aux->prox) {
-        if (count == val){
+Lista* buscaTriangulo (Lista* dados, int index){ 
+    int count = 1;
+    for (Lista *aux=dados; aux!=NULL; aux = aux->prox) {
+        if (aux->tipo == TRI && index == count){
             return aux;
         }
-        else {
+        else if (aux->tipo == TRI){
             count++;
         }
         
 
     }
     return NULL; /* não achou o elemento */
-}
-
-int buscaTriangulo (Lista* dados){ 
-    Lista* aux;
-    int count = 0;
-    for (aux=dados; aux!=NULL; aux = aux->prox) {
-        if (aux->tipo == TRI){
-            return count;
-        }
-        else {
-            count++;
-        }
-        
-
-    }
-    return -1; /* não achou o elemento */
 }
 
 void imprimeFigura (Lista* dados, int tipo){ 
@@ -398,28 +380,24 @@ void imprimeFigura (Lista* dados, int tipo){
     }
 }
 
-Lista* retiraTriangulo(Lista* dados) {
-    int index = buscaTriangulo(dados);
-    if (index < 0){
-        return NULL;
-    }
-    Lista *retira = buscaIndex(dados, index);
-
-    if (retira == NULL){
-        return dados;
-    }
+void retiraLista(Lista* dados, Lista *retira) {
+    Lista * anterior = dados;
 
     if (dados == retira){
         dados = retira->prox;
     }
     else {
-        Lista* anterior = buscaIndex(dados, index -1);
+        for(anterior=dados; anterior!=NULL; anterior = anterior->prox) {
+            if (anterior->prox == retira){
+                break;
+            }
+        }
         anterior->prox = retira->prox;
     }
 
+    free(retira->info);
     free(retira);
 
-    return dados;
 }
 
 void freeLista(Lista* dados){
