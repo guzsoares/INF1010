@@ -267,39 +267,40 @@ void imprimeLista(Lista* dados){
     }
 }
 
-Lista* buscaForma (Lista* dados, int val){ 
+Lista* buscaIndex (Lista* dados, int val){ 
     Lista* aux;
+    int count = 0;
     for (aux=dados; aux!=NULL; aux = aux->prox) {
-        if (aux->tipo == val)
-        return aux;
+        if (count == val){
+            return aux;
+        }
+        else {
+            count++;
+        }
+        
+
     }
     return NULL; /* não achou o elemento */
 }
 
-void retiraLista(Lista* dados, int index) {
-    Lista* atual = dados;
-    Lista* anterior = NULL;
-    Lista* prox = dados->prox;
-    int count = 0;
+Lista* retiraLista(Lista* dados, int index) {
+    Lista* retira = buscaIndex(dados, index);
 
-    if (index == 0){
-        anterior = NULL;
-        prox = atual->prox;
-        dados = dados->prox;
+    if (retira == NULL){
+        return dados;
+    }
+
+    if (dados == retira){
+        dados = retira->prox;
     }
     else {
-
-        while (count != index) {
-            count++;
-            anterior = atual;
-            atual = prox;
-            prox = atual->prox;
-        }
-
-        anterior->prox = prox;
-
+        Lista* anterior = buscaIndex(dados, index -1);
+        anterior->prox = retira->prox;
     }
-    free(atual);
+
+    free(retira);
+
+    return dados;
 }
 
 void freeLista(Lista* dados){
@@ -328,7 +329,7 @@ int main (int argc, char **argv){
 
     printf("Maior área: %.2f\n",maiorArea(dados));
 
-    retiraLista(dados,0);
+    dados = retiraLista(dados,6);
 
     puts("");
 
