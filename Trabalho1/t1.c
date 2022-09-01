@@ -55,7 +55,6 @@ float areaCirc(Circulo *c);
 float areaHexa(Hexagono *h);
 float areaQuad(Quadrado *q);
 float calculaArea(Lista *dados);
-float maiorArea(Lista *dados);
 
 /* ----------------------------------------------------------------------- */
 
@@ -67,7 +66,6 @@ float perimCirc(Circulo *c);
 float perimHexa(Hexagono *h);
 float perimQuad(Quadrado *q);
 float calculaPerim(Lista *dados);
-float maiorPerim(Lista *dados);
 
 /* ---------------------------------------------------------------------------- */
 
@@ -83,9 +81,11 @@ Lista* criaQuadrado(float b, Lista *dados);
 
 /* manipulacao de lista */
 
-void imprimeLista(Lista* dados);
+void imprimeDados(Lista* dado);
+void imprimeFigura (Lista* dados, int tipo);
 Lista* buscaIndex (Lista* dados, int val);
-Lista* retiraLista(Lista* dados, int index);
+int buscaTriangulo (Lista* dados);
+Lista* retiraTriangulo(Lista* dados);
 void freeLista(Lista* dados);
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -102,21 +102,10 @@ int main (int argc, char **argv){
 
     puts("Lista inicial:\n");
 
-    imprimeLista(dados);
+    Lista * aux = buscaIndex(dados, buscaTriangulo(dados));
+    imprimeDados(aux);
 
-    puts("");
-
-    printf("Maior área: %.2f\n",maiorArea(dados));
-
-    printf("Maior perimetro: %.2f\n",maiorPerim(dados));
-
-    dados = retiraLista(dados,6);
-
-    puts("");
-
-    puts("Lista após remoção:\n");
-
-    imprimeLista(dados);
+    imprimeFigura(dados, TRI);
 
     
     return 0;
@@ -175,18 +164,6 @@ float calculaArea(Lista *dados){
     return area;
 }
 
-float maiorArea(Lista *dados){
-    float maiorArea = 0;
-    Lista *aux;
-    for(aux = dados; aux != NULL; aux = aux->prox){
-        float area = calculaArea(aux);
-        if(area > maiorArea)
-            maiorArea = area;
-    }
-
-    return maiorArea;
-}
-
 float perimRetang(Retangulo *r){
     return (r->b *2 + r->h *2);
 }
@@ -233,18 +210,6 @@ float calculaPerim(Lista *dados){
     }
 
     return perim;
-}
-
-float maiorPerim(Lista *dados){
-    float maiorPerim = 0;
-    Lista *aux;
-    for(aux = dados; aux != NULL; aux = aux->prox){
-        float area = calculaPerim(aux);
-        if(area > maiorPerim)
-            maiorPerim = area;
-    }
-
-    return maiorPerim;
 }
 
 Lista* criaRetangulo(float b, float h, Lista* dados){
@@ -368,30 +333,29 @@ Lista* criaQuadrado(float b, Lista *dados){
     return dados;
 }
 
-void imprimeLista(Lista* dados){
-    Lista *aux;
-    for(aux = dados; aux !=NULL; aux = aux->prox){
-        switch (aux->tipo){
-            case QUA:
-                printf("Quadrado de area: %.2f e de perimetro: %.2f  \n",calculaArea(aux), calculaPerim(aux));
-                break;
-            case TRI:
-                printf("Triangulo de area: %.2f e de perimetro: %.2f  \n", calculaArea(aux), calculaPerim(aux));      
-                break;
-            case HEX:
-                printf("Hexagono de area: %.2f e de perimetro: %.2f \n",calculaArea(aux), calculaPerim(aux)); 
-                break;
-            case RET:
-                printf("Retangulo de area: %.2f e de perimetro: %.2f  \n",calculaArea(aux), calculaPerim(aux));           
-                break;
-            case CIR:
-                printf("Circulo de area: %.2f e de perimetro: %.2f  \n", calculaArea(aux), calculaPerim(aux));           
-                break;
-            default:
-                printf("Tipo inexistente");
-                break;  
-            }
-    }
+void imprimeDados(Lista* dado){
+    Lista *aux = dado;
+
+    switch (aux->tipo){
+        case QUA:
+            printf("Quadrado de area: %.2f e de perimetro: %.2f  \n",calculaArea(aux), calculaPerim(aux));
+            break;
+        case TRI:
+            printf("Triangulo de area: %.2f e de perimetro: %.2f  \n", calculaArea(aux), calculaPerim(aux));      
+            break;
+        case HEX:
+            printf("Hexagono de area: %.2f e de perimetro: %.2f \n",calculaArea(aux), calculaPerim(aux)); 
+            break;
+        case RET:
+            printf("Retangulo de area: %.2f e de perimetro: %.2f  \n",calculaArea(aux), calculaPerim(aux));           
+            break;
+        case CIR:
+            printf("Circulo de area: %.2f e de perimetro: %.2f  \n", calculaArea(aux), calculaPerim(aux));           
+            break;
+        default:
+            printf("Tipo inexistente");
+            break;  
+        }
 }
 
 Lista* buscaIndex (Lista* dados, int val){ 
@@ -410,8 +374,36 @@ Lista* buscaIndex (Lista* dados, int val){
     return NULL; /* não achou o elemento */
 }
 
-Lista* retiraLista(Lista* dados, int index) {
-    Lista* retira = buscaIndex(dados, index);
+int buscaTriangulo (Lista* dados){ 
+    Lista* aux;
+    int count = 0;
+    for (aux=dados; aux!=NULL; aux = aux->prox) {
+        if (aux->tipo == TRI){
+            return count;
+        }
+        else {
+            count++;
+        }
+        
+
+    }
+    return -1; /* não achou o elemento */
+}
+
+void imprimeFigura (Lista* dados, int tipo){ 
+    for (Lista *aux = dados; aux != NULL; aux = aux->prox) {
+        if (tipo == aux->tipo){
+            imprimeDados(aux);
+        }
+    }
+}
+
+Lista* retiraTriangulo(Lista* dados) {
+    int index = buscaTriangulo(dados);
+    if (index < 0){
+        return NULL;
+    }
+    Lista *retira = buscaIndex(dados, index);
 
     if (retira == NULL){
         return dados;
