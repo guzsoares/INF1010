@@ -1,20 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-/*
-Funcoes Feitas:
-    -Todas as structs
-    -Calcula areas
-    -Cria figura
-    -Verifica tipo e imprime a area da figura x
-    -Calcula maior area 
-    -Libera lista
-
-Falta fazer:
-    -Funcao inicializa lista
-    -Funcao imprime lista (TIPO DE FIGURA, DADOS, AREA)
-
-*/
 
 #define QUA 0 
 #define TRI 1 
@@ -22,22 +8,20 @@ Falta fazer:
 #define RET 3 
 #define CIR 4
 
-struct triangulo{
+/* structs das formas */
+
+typedef struct triangulo{
     float b;
+}Triangulo;
 
-};
-typedef struct triangulo Triangulo;
-
-struct hexagono{
+typedef struct hexagono{
     float b;
-};
-typedef struct hexagono Hexagono;
+}Hexagono;
 
-struct retangulo{
+typedef struct retangulo{
     float b;
     float h;
-};
-typedef struct retangulo Retangulo;
+}Retangulo;
 
 struct circulo{
     float r;
@@ -49,6 +33,10 @@ struct quadrado{
 };
 typedef struct quadrado Quadrado;
 
+/* ------------------------------------------------------------------------------------- */
+
+/* struct lista */
+
 struct lista{
   int tipo;
   void *info;
@@ -56,6 +44,10 @@ struct lista{
     
 };
 typedef struct lista Lista;
+
+/* --------------------------------------------------------------------------------- */
+
+/* Funcoes para calcular as √°reas */
 
 static float area_ret(Retangulo *r){
     return(r->b*r->h);
@@ -76,119 +68,30 @@ static float area_quad(Quadrado *q){
     return (q->b * q->b);
 }
 
-Lista* cria_ret(float b, float h){
-    Retangulo* ret;
-    Lista* curr_data;
-
-    //cria retangulo
-    ret = (Retangulo*)malloc(sizeof(Retangulo));
-
-    ret->b = b;
-    ret->h = h;
-
-    // cria lista
-    curr_data = (Lista*)malloc(sizeof(Lista));
-
-    curr_data->tipo = RET;
-    curr_data->info = ret;
-    curr_data->prox = NULL;
-
-    return curr_data;
-}
-
-Lista* cria_circulo(float r){
-    Circulo* circ;
-    Lista* curr_data;
-
-    // cria triangulo
-    circ = (Circulo*)malloc(sizeof(Circulo));
-    circ->r = r;
-
-    // cria lista
-    curr_data = (Lista*)malloc(sizeof(Lista));
-    curr_data->tipo = CIR;
-    curr_data->info = circ;
-    curr_data->prox = NULL;
-
-    return curr_data;
-}
-
-Lista* cria_triangulo(float b){
-    Triangulo* trig;
-    Lista* curr_data;
-
-    // cria triangulo
-    trig = (Triangulo*)malloc(sizeof(Retangulo));
-    trig->b = b;
-
-    // cria lista
-    curr_data = (Lista*)malloc(sizeof(Lista));
-    curr_data->tipo = TRI;
-    curr_data->info = trig;
-    curr_data->prox = NULL;
-
-    return curr_data;
-}
-
-Lista* cria_hex(float b){
-    Hexagono* hex;
-    Lista* curr_data;
-
-    // cria triangulo
-    hex = (Hexagono*)malloc(sizeof(Hexagono));
-    hex->b = b;
-
-    
-    // cria lista
-    curr_data = (Lista*)malloc(sizeof(Lista));
-    curr_data->tipo = HEX;
-    curr_data->info = hex;
-    curr_data->prox = NULL;
-
-    return curr_data;
-}
-
-Lista* cria_quad(float b){
-    Quadrado* quad;
-    Lista* curr_data;
-
-    // cria triangulo
-    quad = (Quadrado*)malloc(sizeof(Quadrado));
-    quad->b = b;
-
-
-    // cria lista
-    curr_data = (Lista*)malloc(sizeof(Lista));
-    curr_data->tipo = QUA;
-    curr_data->info = quad;
-    curr_data->prox = NULL;
-
-    return curr_data;
-}
-
-float calculaArea(Lista *lst){
+float calculaArea(Lista *dados){
     float area;
 
-    switch (lst->tipo){
+    switch (dados->tipo){
         case QUA:
-            area  = area_quad((Quadrado*)lst->info);
+            area  = area_quad((Quadrado*)dados->info);
             break;
 
         case TRI:
-            area  = area_trig((Triangulo*)lst->info);        
+            area  = area_trig((Triangulo*)dados->info);        
             break;
 
         case HEX:
-            area  = area_hex((Hexagono*)lst->info);
-
+            area  = area_hex((Hexagono*)dados->info);
             break;
+
         case RET:
-            area  = area_ret((Retangulo*)lst->info);
+            area  = area_ret((Retangulo*)dados->info);
             break;          
 
         case CIR:
-            area  = area_circ((Circulo*)lst->info);
+            area  = area_circ((Circulo*)dados->info);
             break;
+
         default:
             printf("Tipo inexistente");
             break;  
@@ -197,76 +100,165 @@ float calculaArea(Lista *lst){
     return area;
 }
 
-Lista* lst_busca (Lista* lst, int val){ 
-    Lista* aux;
-    for (aux=lst; aux!=NULL; aux = aux->prox) {
-        if (aux->tipo == val)
-        return aux;
-    }
-    return NULL; /* n„o achou o elemento */
-}
-/*
-Lista* lst_retira (Lista* lst, int val){
-    Lista* ant = NULL; 
-    Lista* p = lst; 
-    while (p != NULL && p->info != val) {
-        ant = p;
-        p = p->prox;
-    }
-
-    if (p == NULL)
-        return lst; 
-
-    if (ant == NULL) /
-        lst = p->prox;
-    else 
-        ant->prox = p->prox;
-    
-    free(p); 
-    return lst;
-}
-*/
-
-void lst_libera (Lista* lst){
-    Lista* aux = lst;
-    while (aux != NULL) {
-        Lista* t = aux->prox; /* guarda referÍncia para o prÛximo elemento */
-        free(aux); /* libera a memÛria apontada por p */
-        aux = t; /* faz p apontar para o prÛximo */
-    }
-}
-
-float maiorArea(Lista *lst){
-    float maiorArea = 0.0;
+float maiorArea(Lista *dados){
+    float maiorArea = 0;
     Lista *aux;
-    for(aux = lst; aux!= NULL; aux= aux->prox){
+    for(aux = dados; aux != NULL; aux = aux->prox){
         float area = calculaArea(aux);
-        if(area> maiorArea)
+        if(area > maiorArea)
             maiorArea = area;
     }
 
     return maiorArea;
 }
 
+/* ----------------------------------------------------------------------- */
 
-void imprimeLista(Lista* lst){
-    Lista *atual;
-    for(atual = lst; atual !=NULL; atual = atual->prox){
-        switch (atual->tipo){
+/* cria as formas nas listas */
+
+Lista* criaRetangulo(float b, float h, Lista* dados){
+    Retangulo* ret;
+    Lista* curr_data = NULL;
+
+
+    if (!(dados)) {
+
+        ret = (Retangulo*)malloc(sizeof(Retangulo));
+        ret->b = b;
+        ret->h = h;
+
+        curr_data = (Lista*)malloc(sizeof(Lista));
+        curr_data->tipo = RET;
+        curr_data->info = ret;
+        curr_data->prox = NULL;
+        dados = curr_data;
+        return dados;
+    }
+
+    dados->prox = criaRetangulo(b, h, dados->prox);
+
+
+    return dados;
+}
+
+Lista* criaCirculo(float r, Lista* dados){
+    Circulo* circ;
+    Lista* curr_data = NULL;
+
+
+    if (!(dados)) {
+
+        circ = (Circulo*)malloc(sizeof(Circulo));
+        circ->r = r;
+
+        curr_data = (Lista*)malloc(sizeof(Lista));
+        curr_data->tipo = CIR;
+        curr_data->info = circ;
+        curr_data->prox = NULL;
+        dados = curr_data;
+        return dados;
+    }
+
+    dados->prox = criaCirculo(r, dados->prox);
+
+
+    return dados;
+}
+
+Lista* cria_triangulo(float b, Lista *dados){
+    Triangulo* trig;
+    Lista* curr_data = NULL;
+
+
+    if (!(dados)) {
+
+        trig = (Triangulo*)malloc(sizeof(Triangulo));
+        trig->b = b;
+
+        curr_data = (Lista*)malloc(sizeof(Lista));
+        curr_data->tipo = TRI;
+        curr_data->info = trig;
+        curr_data->prox = NULL;
+        dados = curr_data;
+        return dados;
+    }
+
+    dados->prox = cria_triangulo(b, dados->prox);
+
+
+    return dados;
+}
+
+Lista* criaHexagono(float b, Lista* dados){
+    Hexagono* hex;
+    Lista* curr_data = NULL;
+
+
+    if (!(dados)) {
+
+        hex = (Hexagono*)malloc(sizeof(Hexagono));
+        hex->b = b;
+
+        curr_data = (Lista*)malloc(sizeof(Lista));
+        curr_data->tipo = HEX;
+        curr_data->info = hex;
+        curr_data->prox = NULL;
+        dados = curr_data;
+        return dados;
+    }
+
+    dados->prox = criaHexagono(b, dados->prox);
+
+
+    return dados;
+}
+
+Lista* criaQuadrado(float b, Lista *dados){
+    Quadrado* quad;
+    Lista* curr_data = NULL;
+
+
+    if (!(dados)) {
+
+        quad = (Quadrado*)malloc(sizeof(Quadrado));
+        quad->b = b;
+
+        curr_data = (Lista*)malloc(sizeof(Lista));
+        curr_data->tipo = QUA;
+        curr_data->info = quad;
+        curr_data->prox = NULL;
+        dados = curr_data;
+        return dados;
+    }
+
+    dados->prox = criaQuadrado(b, dados->prox);
+
+
+    return dados;
+}
+
+/* ------------------------------------------------------------------------------ */
+
+/* manipulacao de lista */
+
+void imprimeLista(Lista* dados){
+    Lista *aux;
+    for(aux = dados; aux !=NULL; aux = aux->prox){
+        switch (aux->tipo){
             case QUA:
-                printf("Quadrado area %f",calculaArea(atual));
+                printf("Quadrado area %.2f \n",calculaArea(aux));
                 break;
             case TRI:
-                printf("Triangulo de area %f", calculaArea(atual));      
+                printf("Triangulo de area %.2f \n", calculaArea(aux));      
                 break;
             case HEX:
-                printf("Triangulo area %f",calculaArea(atual)); 
+                printf("Hexagono area %.2f \n",calculaArea(aux)); 
                 break;
             case RET:
-                printf("Retangulo  area %f",calculaArea(atual));           
+                printf("Retangulo  area %.2f \n",calculaArea(aux));           
                 break;
             case CIR:
-                printf("Circulo de area %f", calculaArea(atual));           
+                printf("Circulo de area %.2f \n", calculaArea(aux));           
                 break;
             default:
                 printf("Tipo inexistente");
@@ -275,28 +267,73 @@ void imprimeLista(Lista* lst){
     }
 }
 
-
-Lista *lst_cria(){
-    return NULL;
+Lista* buscaForma (Lista* dados, int val){ 
+    Lista* aux;
+    for (aux=dados; aux!=NULL; aux = aux->prox) {
+        if (aux->tipo == val)
+        return aux;
+    }
+    return NULL; /* n√£o achou o elemento */
 }
-int main (int argc, char **argv){
-    Lista *lst;
-    lst = lst_cria();
-    lst = cria_triangulo(3.0);
-    lst = cria_triangulo(3.0);
-    lst = cria_triangulo(3.0);
-    lst = cria_quad(2.0);
-    lst = cria_ret(3.0, 5.0);
-    lst = cria_circulo(4.0);
-    lst = cria_hex(3.0);
 
-    imprimeLista(lst);
-    
-    printf("%f",maiorArea(lst));
+void retiraLista(Lista* dados, int index) {
+    Lista* atual = dados;
+    Lista* anterior = NULL;
+    Lista* prox = dados->prox;
+    int count = 0;
+
+    if (index == 0){
+        anterior = NULL;
+        prox = atual->prox;
+        dados = dados->prox;
+    }
+    else {
+
+        while (count != index) {
+            count++;
+            anterior = atual;
+            atual = prox;
+            prox = atual->prox;
+        }
+
+        anterior->prox = prox;
+
+    }
+    free(atual);
+}
+
+void freeLista(Lista* dados){
+    Lista* aux = dados;
+    while (aux != NULL) {
+        Lista* next = aux->prox;
+        free(aux->info); // liberando mem√≥ria da forma
+        free(aux);  // liberando posi√ß√£o da lista
+        aux = next; // resetando auxiliar
+    }
+}
+
+/* ----------------------------------------------------------------------------------------------- */
+
+int main (int argc, char **argv){
+    Lista *dados = NULL;
+    dados = cria_triangulo(3.0, dados);
+    dados = cria_triangulo(4.0, dados);
+    dados = cria_triangulo(5.0, dados);
+    dados = criaQuadrado(2.0, dados);
+    dados = criaRetangulo(3.0, 5.0, dados);
+    dados = criaCirculo(4.0, dados);
+    dados = criaHexagono(3.0, dados);
+
+    imprimeLista(dados);
+
+    printf("Maior √°rea: %.2f\n",maiorArea(dados));
+
+    retiraLista(dados,0);
+
+    puts("");
+
+    imprimeLista(dados);
+
     
     return 0;
 }
-
-
-
-
