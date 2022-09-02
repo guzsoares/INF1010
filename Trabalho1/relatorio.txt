@@ -1,3 +1,9 @@
+Gustavo Molina Soares (2020209)
+Leo Land Bairros Lomardo (2020201)
+
+
+- CÓDIGO FONTE -
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -423,7 +429,7 @@ Lista *retiraLista(Lista* dados, Lista *retira) {
 
     free(retira->info);
     free(retira);
-
+    
     return dados;
 
 }
@@ -441,3 +447,52 @@ void freeLista(Lista* dados){
 Lista *criaLista(){
     return NULL;
 }
+
+- FIM DO CÓDIGO FONTE -
+
+- SAÍDA NO TERMINAL -
+
+Lista inicial:
+
+Triângulo de área 3.90, com perímetro 9.00 e sua base 3.00  
+Triângulo de área 10.83, com perímetro 15.00 e sua base 5.00  
+Triângulo de área 6.93, com perímetro 12.00 e sua base 4.00  
+
+Primeira Exclusão
+Triângulo de área 3.90, com perímetro 9.00 e sua base 3.00  
+Triângulo de área 6.93, com perímetro 12.00 e sua base 4.00  
+Segunda Exclusão
+Triângulo de área 6.93, com perímetro 12.00 e sua base 4.00  
+Terceira Exclusão
+
+- FIM DA SAÍDA NO TERMINAL - 
+
+Durante o desenvolvimento do laboratório elaboramos todas as funções que foram pedidas e vamos explicar como utilizar cada uma
+delas na main.
+
+- criaLista(); Essa função não requer paramêtro e vai retornar o valor nulo para inicilizar a lista.
+
+- imprimeFigura(Lista *dados, int tipo); Essa função recebe dois paramêtros e vai imprimir os dados das figuras solicitadas,
+no paramêtro tipo podemos inserir (ALL,TRI,QUA,HEX,CIR,RET) para obter dados da figura requisitada e o primeiro paramêtro é a lista
+a ser analisada.
+
+- buscaLista(Lista *dados, int index); Essa função recebe dois paramêtros e retorna um ponteiro para o index inserido no segundo
+paramêtro, lembrando que o primeiro paramêtro é a lista a ser analisada, então caso eu queira a informação na 3 posição é só realizar
+buscaLista(dados, 3).
+
+- retiraLista(Lista *dados, Lista *retira); Essa função recebe dois paramêtros e retorna a lista com o elemento passado no segundo
+paramêtro sendo retirado da lista, ela funciona em conjunto com a buscaLista.
+
+- freeLista(Lista *dados); Essa função recebe um paramêtro e ela vai liberar a memoria ocupada pela lista.
+
+- isEmpty(Lista *dados); Essa função recebe um paramêtro e informa se a lista está vazia ou preenchida.
+
+
+Comentários:
+
+A gente não apresentou muitas dificuldades durante o trabalho já que já temos conhecimento prévio de Listas encadeadas e não teve
+muitas funções complicadas para implementar, acabou que a maior dificuldade foi a interpretação do enunciado, ficamos com dúvida
+de como era para elaborar as funções já que estamos acostumados com outras matérias definindo a função protótipo, mas em geral
+o trabalho correu bem e conseguimos implementar tudo que foi pedido.
+
+Pelos testes realizados tudo funciona no programa.
