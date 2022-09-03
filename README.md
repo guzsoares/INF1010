@@ -4,7 +4,7 @@ Trabalho 1 de estrutura de dados avançados
 Nota final: ??/10
 
 Autores:    Gustavo Molina Soares,
-            Leo Land Bairros Lomardo
+            Leo Land Bairos Lomardo
 
 ## Lista heterogênea
 
