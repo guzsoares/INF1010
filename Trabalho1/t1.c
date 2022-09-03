@@ -125,7 +125,7 @@ int main (int argc, char **argv){
     return 0;
 }
 
-// FUNÇÕES
+// FUNCOES
 
 float areaRetang(Retangulo *r){
     return(r->b*r->h);
