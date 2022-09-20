@@ -8,15 +8,21 @@ typedef struct node{
 }Node;
 
 Node *insereABB(int valor, Node *arvore);
-Node* retiraABB(Node* r, int num);
-void insereAB(Node *pai, Node *filho);
-Node *criaAB(int num);
+Node* retiraABB(Node* r, int chave);
+Node *criaArvoreExemplo(int valor, Node *arvore, int isRight);
+Node *criaAB(int chave);
 int alturaArvore(Node * root);
+int isBinaryLogic(Node *arvore);
+int buscaABB(Node *arvore, int chave, int nivel);
+int buscaAB(Node* arvore, int chave);
+void insereAB(Node *pai, Node *filho);
 void printAltura(Node * root, int level);
 void printArvoreNivel(Node * root);
-Node *criaArvoreExemplo(int valor, Node *arvore, int isRight);
 void isBinary(Node *arvore);
-int isBinaryLogic(Node *arvore);
+void mostraPreOrdem(Node *arvore);
+void mostraPosOrdem(Node *arvore);
+
+
 
 int main(void){
     Node *abb = NULL;
@@ -120,13 +126,13 @@ Node *criaArvoreExemplo(int valor, Node *arvore, int isRight){
 }
 
 //Essa funcao retira um no escolhido de maneira recursiva (ABB)
-Node* retiraABB(Node* r, int num){
+Node* retiraABB(Node* r, int chave){
     if (r == NULL)
         return NULL;
-    else if (r->central > num)
-        r->esquerda = retiraABB(r->esquerda, num);
-    else if (r->central < num)
-        r->direita = retiraABB(r->direita, num);
+    else if (r->central > chave)
+        r->esquerda = retiraABB(r->esquerda, chave);
+    else if (r->central < chave)
+        r->direita = retiraABB(r->direita, chave);
     else { 
         if (r->esquerda == NULL && r->direita == NULL) {
             free (r);
@@ -145,8 +151,8 @@ Node* retiraABB(Node* r, int num){
                 f = f->direita;
             }
             r->central = f->central; 
-            f->central = num;
-            r->esquerda = retiraABB(r->esquerda,num);
+            f->central = chave;
+            r->esquerda = retiraABB(r->esquerda,chave);
         }
     }
     return r;
@@ -221,9 +227,57 @@ int isBinaryLogic(Node* arvore)
 void isBinary(Node *arvore){
     int value = isBinaryLogic(arvore);
     if (value  == 1){
-        printf("É binária\n");
+        printf("E binaria\n");
     } 
     else {
-        printf("Não é binária\n");
+        printf("Nao e binaria\n");
+    }
+}
+
+int buscaABB(Node *arvore, int chave, int nivel){
+    int esquerda, direita;
+
+    if(arvore == NULL){
+        printf("Arvore vazia");
+        return 0;   
+    }
+    if(arvore->central == chave){
+        printf("Chave: %d\nPonteiro SE:%p\nPonteiro SD", arvore->central, arvore->esquerda, arvore->direita);
+        return 1;
+    }
+    if(arvore->central > chave){
+
+        direita = buscaABB(arvore->direita, chave, nivel++);
+    }else if(arvore->central < chave){
+        esquerda = buscaABB(arvore->esquerda, chave, nivel++);
+    }
+}
+
+int buscaAB(Node* arvore, int chave){
+    if(arvore==NULL){
+        printf("Arvore vazia");
+        return 0;
+    }else if(arvore->central == chave){
+        printf("Chave: %d\nPonteiro SE:%p\nPonteiro SD", arvore->central, arvore->esquerda, arvore->direita);
+        return 1;
+    }else{
+        buscaAB(arvore->direita, chave);
+        buscaAB(arvore->esquerda, chave);
+    }
+}
+
+void mostraPreOrdem(Node *arvore){ //comeca da raiz e printa tudo da esquerda, depois da direita 
+    if(arvore != NULL){
+        printf("Chave: %d\nPonteiro SE:%p\nPonteiro SD", arvore->central, arvore->esquerda, arvore->direita);
+        mostraPreOrdem(arvore->direita);
+        mostraPreOrdem(arvore->esquerda);
+    }
+}
+void mostraPosOrdem(Node *arvore){ //comeca pelo do canto inferior esquerdo e termina no do canto direito
+    if(arvore != NULL){
+        mostraPreOrdem(arvore->esquerda);        
+        mostraPreOrdem(arvore->direita);
+        printf("Chave: %d\nPonteiro SE:%p\nPonteiro SD", arvore->central, arvore->esquerda, arvore->direita);
+
     }
 }
