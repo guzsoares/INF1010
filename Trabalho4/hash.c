@@ -21,9 +21,10 @@ int mandaChave(long cpf, int k);
 int main(void){
     long tabelaHash[HASH_SIZE];
     long auxLeitura = 0;
-    int chave = 0;
+    int chave, numLeituras, numColisoes = 0;
 
     FILE *arquivo_entrada = fopen("cpf.txt", "r");
+
     if(!arquivo_entrada){
         printf("Erro ao abrir o arquivo.\n");
         exit(1);
@@ -33,12 +34,22 @@ int main(void){
 
     while(!feof(arquivo_entrada)){
         fscanf(arquivo_entrada, "%ld", &auxLeitura);
+        numLeituras++;
         int k = -1;
 
         do{
             chave = mandaChave(auxLeitura, k++);
+            
         }while(tabelaHash[chave] != -1);
-        
+
+        if(k > 0){
+            numColisoes ++;
+        }
+        if(numLeituras == 100 || numLeituras == 200 || numLeituras == 300 || numLeituras == 400 || numLeituras == 500 || numLeituras == 600 || numLeituras == 700 || numLeituras == 800 || numLeituras == 900 || numLeituras == 1000){
+            printf("Leituras:%d\nColisoes:%d", numLeituras, numColisoes);
+            printf("--------------\n");
+        }   
+
         tabelaHash[chave] = auxLeitura;
     }
 
