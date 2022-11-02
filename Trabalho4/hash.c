@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
+
 
 //448.403.418-26 --> size = 14
 
@@ -18,7 +17,7 @@ int buscaElemento(long *tabelaHash, long valor);
 int main(void){
     long tabelaHash[HASH_SIZE];
     long auxLeitura = 0;
-    int chave, numLeituras = 1, numColisoes = 0;
+    int chave, numLeituras = 0, numColisoes = 0;
     int numLeituras_X[HASH_SIZE]; //vetores para plotar grafico
     int numColisoes_Y[HASH_SIZE];
     int numColisoesTotal = 0;
@@ -26,7 +25,7 @@ int main(void){
     FILE *arquivo_graph = fopen("grafico.txt", "w");
 
     int resultadoBusca = 0;
-    long valorBusca = 44840341826;
+    long valorBusca = 12345678901;
 
     if(!arquivo_entrada){
         printf("Erro ao abrir o arquivo.\n");
@@ -55,7 +54,7 @@ int main(void){
 
         if(numLeituras == 100 || numLeituras == 200 || numLeituras == 300 || numLeituras == 400 || numLeituras == 500 || numLeituras == 600 || numLeituras == 700 || numLeituras == 800 || numLeituras == 900 || numLeituras == 1000){
             printf("Leituras:%d\nColisoes:%d", numLeituras, numColisoes);
-            printf("\n--------------");
+            printf("\n--------------\n");
         }   
         tabelaHash[chave] = auxLeitura;
     }
@@ -67,7 +66,7 @@ int main(void){
 
 
     resultadoBusca = buscaElemento(tabelaHash, valorBusca);
-    if(resultadoBusca == -1){
+    if(resultadoBusca == -3){
         printf("Elemento nao encontrado\n");
     }else{
         printf("O valor %ld foi encontrado e esta na posicao %d ta tabela\n", valorBusca, resultadoBusca);
@@ -93,9 +92,12 @@ int buscaElemento(long *tabelaHash, long valor){
         if(tabelaHash[posicao] == valor){
             return posicao;
         }
+        if((posicao+k) > HASH_SIZE){
+            break;
+        }
     }
     
-    return -1;
+    return -3;
 }
 int mandaChave(long cpf, int k){
     int chave = 0;
