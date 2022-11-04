@@ -109,7 +109,7 @@ int buscaElemento(unsigned long *tabelaHash, unsigned long valor){
 int mandaChave(unsigned long cpf, int k){
     int chave = 0;
 
-    chave = (cpf + k) % DATA_SIZE;
+    chave = (cpf + k) % 1021;
 
     return chave;
 }
@@ -124,3 +124,11 @@ int achaMax(int *numColisoes_Y, int posicao){
 
     return maxColisoes;
 }
+
+/*
+PRIMO   COLISOES
+1019    566
+1021    491
+1031    461
+1033    779
+*/
