@@ -15,6 +15,7 @@ typedef struct vertex{
 
 typedef struct graph{
     int num_vertex;
+    int *visited;
     Vertex **adjList;
 }Graph;
 
@@ -34,14 +35,17 @@ void addConnections(Graph *graph, int s, int d, int cost);
 void kruskal(Edge* conectionList, Graph *kruskalTree);
 void djistrikaPath(int startNode, Graph *graph, int endNode);
 void Union(int vRep[], int x, int y);
+void DFS( Graph* graph, int vertex);
+void sentNegative(int *vRep, int numVertice);
 int find(int vRep[], int i);
 int minDistance(int *dist, bool *isPath);
-void sentNegative(int *vRep, int numVertice);
+
 
 int main(){
   Edge *conectionList;
   Graph* graph = createGraph(numNodes);
   Graph* kruskalTree = createGraph(numNodes);
+  
   addConnections(graph, 0, 1, 6);
   addConnections(graph, 0, 2, 9);
   addConnections(graph, 0, 3, 15);
@@ -63,6 +67,8 @@ int main(){
 
   printGraph(kruskalTree);
 
+  DFS(graph, 0);
+
   return 0;
 }
 
@@ -76,12 +82,14 @@ Vertex *createVertex(int value){
 
 Graph *createGraph(int numVertex){
     Graph *newGraph = malloc(sizeof(Graph));
-    newGraph->num_vertex = numVertex;
 
+    newGraph->num_vertex = numVertex;
     newGraph->adjList = malloc(numVertex * sizeof(Vertex));
+    newGraph->visited = malloc(numVertex * sizeof(int));
 
     for (int i = 0; i < numVertex; i++){
         newGraph->adjList[i] = NULL;
+        newGraph->visited[i] = 0;
     }
     return newGraph;
 }
@@ -248,4 +256,21 @@ Edge* createEdge(int src, int dest, int cost){
   newEdge->next = NULL;	
 
   return newEdge;
+}
+
+void DFS( Graph* graph, int vertex) {
+  Vertex* adjList = graph->adjList[vertex];
+  Vertex* temp = adjList;
+
+  graph->visited[vertex] = 1;
+  printf("Visited:%d\n", vertex);
+
+  while (temp != NULL) {
+    int connectedVertex = temp->value;
+
+    if (graph->visited[connectedVertex] == 0) {
+      DFS(graph, connectedVertex);
+    }
+    temp = temp->next;
+  }
 }
