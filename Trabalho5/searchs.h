@@ -16,7 +16,7 @@ void DFS( Graph* graph, int src) {
   while (temp != NULL) {
     int connectedVertex = temp->value;
 
-    if (graph->visited[connectedVertex] == 0) {
+    if (graph->visited[connectedVertex] <= 0) {
       DFS(graph, connectedVertex);
     }
     temp = temp->next;
