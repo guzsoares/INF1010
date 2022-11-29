@@ -27,7 +27,6 @@ void BFS(Graph *graph, int src) {
   
     Queue *q = createQueue();
 
-
     graph->visited[src] = 1;
     enqueue(q, src);
 

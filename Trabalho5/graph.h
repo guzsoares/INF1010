@@ -39,7 +39,7 @@ Graph *createGraph(int numVertex){
 
     for (int i = 0; i < numVertex; i++){
         newGraph->adjList[i] = NULL;
-        newGraph->visited[i] = 0;
+        newGraph->visited[i] = -1;
     }
     return newGraph;
 }
