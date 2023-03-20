@@ -1,5 +1,5 @@
 # INF1010
-Todos os trabalhso de Estrutura de Dados Avançada
+Todos os trabalhos de Estrutura de Dados Avançada
 
 Nota final: 10/10
 
